@@ -1,8 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+@model List<BusinessLogic.Models.OrderEF>
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4>Agregacja zamówień po metodach płatności</h4>
+
+    <div>
+        <div class="row bg-dark text-white">
+            <div class="col-4">
+                Metoda płatości
+            </div>
+            <div class="col-4">
+                Ilość zamówień
+            </div>
+
+            <div class="col-4">
+                Wartość netto
+            </div>
+        </div>
+
+        @foreach (BusinessLogic.Models.OrderEF order in Model)
+        {
+            <div class="row">
+                <div class="col-4">
+                    @order.PaymentMethod
+                </div>
+                <div class="col-4">
+                    @order.OrderQuantity
+                </div>
+
+                <div class="col-4">
+                    @order.TotalGrossValue
+                </div>
+            </div>
+        }
+    </div>
+
+
 </div>

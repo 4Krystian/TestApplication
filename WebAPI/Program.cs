@@ -1,3 +1,12 @@
+using BusinessLogic.Infrastructure;
+using Microsoft.Extensions.Configuration;
+
+ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+configurationBuilder.AddJsonFile("appsettings.json");
+
+IConfiguration configuration = configurationBuilder.Build();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +15,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddLibrary(configuration);
 
 var app = builder.Build();
 

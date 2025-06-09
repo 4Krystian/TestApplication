@@ -1,0 +1,48 @@
+﻿
+
+@model  List<BusinessLogic.Models.OrderWebAPI>
+
+
+<div class="text-center">
+    <h4>Zestawienie zamówień pobranych przez Web API</h4>
+
+    <div>
+        <div class="row bg-dark text-white">
+            <div class="col-3">
+                Identyfikator zamówienia
+            </div>
+            <div class="col-3">
+               Sklep
+            </div>
+
+            <div class="col-3">
+                Miasto
+            </div>
+
+            <div class="col-3">
+                Całkowita wartość brutto zamówienia
+            </div>
+        </div>
+
+        @foreach (BusinessLogic.Models.OrderWebAPI order in Model)
+        {
+            <div class="row">
+                <div class="col-3">
+                    @order.OrderId
+                </div>
+                <div class="col-3">
+                    @order.Shop
+                </div>
+                <div class="col-3">
+                    @order.Town
+                </div>
+
+                <div class="col-3">
+                    @order.TotalNetValue
+                </div>
+            </div>
+        }
+    </div>
+
+
+</div>

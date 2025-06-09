@@ -25,14 +25,23 @@ namespace NUnitTest
             optionsBuilder.UseSqlServer(Configuration["ConnectionStrings:TestDatabase"],
                                         sqlServerOptions => sqlServerOptions.CommandTimeout(3600)).EnableSensitiveDataLogging();
 
-            this.DbContext = new BusinessLogic.Infrastructure.EFDbContext(optionsBuilder.Options);
+            this.EFDbContext = new BusinessLogic.Infrastructure.EFDbContext(optionsBuilder.Options);
+
+            this.Config =  new BusinessLogic.Infrastructure.Config(Configuration);
         }
 
-        protected BusinessLogic.Infrastructure.EFDbContext DbContext
+        protected BusinessLogic.Infrastructure.EFDbContext EFDbContext
         {
             get;
             private set;
         }
+
+        protected BusinessLogic.Infrastructure.Config Config
+        {
+            get;
+            private set;
+        }
+
 
         protected IConfiguration Configuration
         {
@@ -41,10 +50,12 @@ namespace NUnitTest
         }
 
 
+
+
         [TearDown]
         public void Close()
         {
-            this.DbContext.Dispose();
+            this.EFDbContext.Dispose();
         }
     }
 }

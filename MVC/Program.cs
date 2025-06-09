@@ -1,7 +1,19 @@
+
+using BusinessLogic.Infrastructure;
+
+ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+configurationBuilder.AddJsonFile("appsettings.json");
+
+IConfiguration configuration = configurationBuilder.Build();
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddLibrary(configuration);
 
 var app = builder.Build();
 

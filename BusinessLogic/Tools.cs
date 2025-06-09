@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace BusinessLogic
 {
@@ -20,6 +21,18 @@ namespace BusinessLogic
             } while (_randomString.Length < Length);
 
             return _randomString.ToString().Substring(0, Length);
+        }
+
+        public static T DeserializeJson<T>(string Value) where T : new()
+        {
+            if (!String.IsNullOrEmpty(Value))
+            {
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(Value);
+            }
+            else
+            {
+                return new T();
+            }
         }
     }
 }

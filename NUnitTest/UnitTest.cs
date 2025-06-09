@@ -10,16 +10,16 @@ namespace NUnitTest
         {
             Random random = new Random();
 
-            List<BusinessLogic.Entities.Shop> shops = this.DbContext.Shops.ToList();
+            List<BusinessLogic.Entities.Shop> shops = this.EFDbContext.Shops.ToList();
 
             if (!shops.Any())
             {
-                this.DbContext.Shops.AddRange(Enumerable.Range(1, 10).Select(index => new Shop { Name = $"Sklep {index}" }));
+                this.EFDbContext.Shops.AddRange(Enumerable.Range(1, 10).Select(index => new Shop { Name = $"Sklep {index}" }));
 
-                this.DbContext.SaveChanges();
+                this.EFDbContext.SaveChanges();
             }
 
-            List<BusinessLogic.Entities.Customer> customers = this.DbContext.Customers.ToList();
+            List<BusinessLogic.Entities.Customer> customers = this.EFDbContext.Customers.ToList();
 
             if (!customers.Any())
             {
@@ -30,7 +30,7 @@ namespace NUnitTest
                 string[] address = new string[] { "Polna", "Leśna", "Słoneczna", "Pomarańczowa", "Ogrodowa", "Brzozowa", "Szkolna" };
 
 
-                this.DbContext.Customers.AddRange(Enumerable.Range(1, towns.Length).Select(index => new Customer 
+                this.EFDbContext.Customers.AddRange(Enumerable.Range(1, towns.Length).Select(index => new Customer 
                 { 
                     Town= towns[index-1],
                     PostalCode= postcodes[index-1],
@@ -38,23 +38,23 @@ namespace NUnitTest
                 }                
                 ));
 
-                this.DbContext.SaveChanges();
+                this.EFDbContext.SaveChanges();
             }
 
-            List<BusinessLogic.Entities.Item> items = this.DbContext.Items.ToList();
+            List<BusinessLogic.Entities.Item> items = this.EFDbContext.Items.ToList();
 
             if(!items.Any())
             {
-                this.DbContext.Items.AddRange(Enumerable.Range(1, 50).Select(index => new Item 
+                this.EFDbContext.Items.AddRange(Enumerable.Range(1, 50).Select(index => new Item 
                 { 
                     EAN= BusinessLogic.Tools.GetRandomString(13),
                     PriceNet= random.Next(50,350)
                 }                
                 ));
 
-                this.DbContext.SaveChanges();
+                this.EFDbContext.SaveChanges();
 
-                items = this.DbContext.Items.ToList();
+                items = this.EFDbContext.Items.ToList();
 
                 decimal defaultVATRate = 1.22M;
 
@@ -63,33 +63,33 @@ namespace NUnitTest
                     item.PriceGross = item.PriceNet * defaultVATRate;                        
                 }
 
-                this.DbContext.SaveChanges();
+                this.EFDbContext.SaveChanges();
             }
 
-            List<BusinessLogic.Entities.PaymentMethod> paymentMethods = this.DbContext.PaymentMethods.ToList();
+            List<BusinessLogic.Entities.PaymentMethod> paymentMethods = this.EFDbContext.PaymentMethods.ToList();
 
             if(!paymentMethods.Any())
             {
-                this.DbContext.PaymentMethods.Add(new PaymentMethod() { Name = "gotówka" });
-                this.DbContext.PaymentMethods.Add(new PaymentMethod() { Name = "karta płatnicza" });
-                this.DbContext.PaymentMethods.Add(new PaymentMethod() { Name = "przelew" });
+                this.EFDbContext.PaymentMethods.Add(new PaymentMethod() { Name = "gotówka" });
+                this.EFDbContext.PaymentMethods.Add(new PaymentMethod() { Name = "karta płatnicza" });
+                this.EFDbContext.PaymentMethods.Add(new PaymentMethod() { Name = "przelew" });
 
-                this.DbContext.SaveChanges();
+                this.EFDbContext.SaveChanges();
             }
 
 
-            List<BusinessLogic.Entities.Order> orders = this.DbContext.Orders.ToList();
+            List<BusinessLogic.Entities.Order> orders = this.EFDbContext.Orders.ToList();
 
 
             if (!orders.Any())
             {
-                shops = this.DbContext.Shops.ToList();
+                shops = this.EFDbContext.Shops.ToList();
 
-                customers = this.DbContext.Customers.ToList();
+                customers = this.EFDbContext.Customers.ToList();
 
-                items = this.DbContext.Items.ToList();
+                items = this.EFDbContext.Items.ToList();
 
-                paymentMethods = this.DbContext.PaymentMethods.ToList();
+                paymentMethods = this.EFDbContext.PaymentMethods.ToList();
 
                 foreach (var index in Enumerable.Range(1, 250))
                 {
@@ -100,9 +100,9 @@ namespace NUnitTest
                         PaymentMethod = paymentMethods[random.Next(paymentMethods.Count() - 1)]
                     };
 
-                    this.DbContext.Orders.Add(order);
+                    this.EFDbContext.Orders.Add(order);
 
-                    this.DbContext.OrderItems.AddRange(Enumerable.Range(1, random.Next(1,5)).Select(index => new OrderItem
+                    this.EFDbContext.OrderItems.AddRange(Enumerable.Range(1, random.Next(1,5)).Select(index => new OrderItem
                     {
                         Order = order,
                         Item = items[random.Next(items.Count() - 1)],
@@ -110,13 +110,33 @@ namespace NUnitTest
                     }
                     ));
 
-                    this.DbContext.SaveChanges();
+                    this.EFDbContext.SaveChanges();
                 }
 
 
             }
 
             Assert.Pass();
+        }
+
+        [Test]
+        public void GetOrdersBySQL()
+        {
+            BusinessLogic.OrderProcessor orderProcessor = new BusinessLogic.OrderProcessor(EFDbContext, Config);
+
+            var orders = orderProcessor.GetOrdersBySQL();   
+
+            Assert.IsNotNull(orders);   
+        }
+
+        [Test]
+        public void GetOrdersByEF()
+        {
+            BusinessLogic.OrderProcessor orderProcessor = new BusinessLogic.OrderProcessor(EFDbContext, Config);
+
+            var orders = orderProcessor.GetOrdersByEF();
+
+            Assert.IsNotNull(orders);
         }
     }
 }
