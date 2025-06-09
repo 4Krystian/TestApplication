@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BusinessLogic.Migrations
 {
-    [DbContext(typeof(DbContext))]
-    [Migration("20250609090858_InitialCreate")]
+    [DbContext(typeof(EFDbContext))]
+    [Migration("20250609101531_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -107,7 +107,10 @@ namespace BusinessLogic.Migrations
             modelBuilder.Entity("BusinessLogic.Entities.OrderItem", b =>
                 {
                     b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
                     b.Property<int>("ItemId")
                         .HasColumnType("int");
@@ -121,6 +124,8 @@ namespace BusinessLogic.Migrations
                     b.HasKey("OrderItemId");
 
                     b.HasIndex("ItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
                 });
@@ -197,7 +202,7 @@ namespace BusinessLogic.Migrations
 
                     b.HasOne("BusinessLogic.Entities.Order", "Order")
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderItemId")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

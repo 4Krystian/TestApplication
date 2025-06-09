@@ -16,7 +16,7 @@ namespace BusinessLogic.Infrastructure
 
             services.AddSingleton(Configuration);
             services.AddSingleton(new Config(Configuration));
-            services.AddDbContext<DbContext>(options => options.UseSqlServer(connectionString, sqlServerOptions => sqlServerOptions.CommandTimeout(3600).UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
+            services.AddDbContext<EFDbContext>(options => options.UseSqlServer(connectionString, sqlServerOptions => sqlServerOptions.CommandTimeout(3600).UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
 
             return services;
 		}

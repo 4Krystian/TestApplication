@@ -8,9 +8,9 @@ using System.Reflection.Metadata;
 
 namespace BusinessLogic.Infrastructure
 {
-    public class DbContext : Microsoft.EntityFrameworkCore.DbContext
+    public class EFDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        public DbContext(DbContextOptions<DbContext> Options)
+        public EFDbContext(DbContextOptions<EFDbContext> Options)
             : base(Options)
         {
             Database.EnsureCreated();
@@ -133,16 +133,16 @@ namespace BusinessLogic.Infrastructure
 
                 entity.HasMany(d => d.OrderItems)
                     .WithOne(p => p.Order)
-                    .HasForeignKey(d => d.OrderItemId);
+                    .HasForeignKey(d => d.OrderId);
             }
             );
 
         }
     }
 
-    class Program : IDesignTimeDbContextFactory<BusinessLogic.Infrastructure.DbContext>
+    class Program : IDesignTimeDbContextFactory<BusinessLogic.Infrastructure.EFDbContext>
     {
-        public DbContext CreateDbContext(string[] args)
+        public EFDbContext CreateDbContext(string[] args)
         {
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
@@ -152,10 +152,10 @@ namespace BusinessLogic.Infrastructure
 
             string connectionString = configuration["ConnectionStrings:TestDatabase"];
 
-            DbContextOptionsBuilder<DbContext> optionsBuilder = new DbContextOptionsBuilder<DbContext>()
+            DbContextOptionsBuilder<EFDbContext> optionsBuilder = new DbContextOptionsBuilder<EFDbContext>()
                 .UseSqlServer(connectionString);
 
-            return new DbContext(optionsBuilder.Options);
+            return new EFDbContext(optionsBuilder.Options);
         }
     }
 }
